@@ -17,7 +17,6 @@ final class TrackerTypeChoiceViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.tintColor = .ypWhite
         button.addTarget(self, action: #selector(didTapHabitButton), for: .touchUpInside)
-        buttonsView.addSubview(button)
         return button
     }()
     
@@ -30,24 +29,28 @@ final class TrackerTypeChoiceViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.tintColor = .ypWhite
         button.addTarget(self, action: #selector(didTapEventButton), for: .touchUpInside)
-        buttonsView.addSubview(button)
         return button
     }()
 
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
 
+        setupSubviews()
         setupConstraints()
-
         navigationController?.navigationBar.tintColor = .ypBlack
         navigationItem.title = "Создание трекера"
     }
 
     // MARK: - Private Methods
-    private func setupConstraints() {
+    private func setupSubviews() {
+        view.backgroundColor = .ypWhite
         view.addSubview(buttonsView)
+        buttonsView.addSubview(habitButton)
+        buttonsView.addSubview(eventButton)
+    }
+
+    private func setupConstraints() {
         eventButton.translatesAutoresizingMaskIntoConstraints = false
         habitButton.translatesAutoresizingMaskIntoConstraints = false
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
@@ -94,4 +97,3 @@ final class TrackerTypeChoiceViewController: UIViewController {
         present(viewController: viewController)
     }
 }
-

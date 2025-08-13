@@ -16,14 +16,15 @@ final class ScheduleViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
-        view.addSubview(tableView)
         tableView.layer.cornerRadius = 16
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
         tableView.isScrollEnabled = false
+        tableView.tableHeaderView = UIView()
         return tableView
     }()
+    
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
@@ -32,21 +33,25 @@ final class ScheduleViewController: UIViewController {
         button.backgroundColor = .ypBlack
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
-        view.addSubview(button)
         return button
     }()
 
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
 
+        setupSubviews()
         setupConstraints()
         navigationController?.navigationBar.tintColor = .ypBlack
         navigationItem.title = "Расписание"
     }
 
     // MARK: - Private Properties
+    private func setupSubviews() {
+        view.backgroundColor = .ypWhite
+        view.addSubview(tableView)
+        view.addSubview(doneButton)
+    }
 
     private func setupConstraints() {
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -116,4 +121,3 @@ extension ScheduleViewController: ScheduleTableViewCellDelegate {
         }
     }
 }
-

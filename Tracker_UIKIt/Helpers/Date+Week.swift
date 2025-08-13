@@ -1,5 +1,4 @@
 import Foundation
-
 extension Date {
     func dayOfWeek(calendar: Calendar) -> Day? {
         let weekday = calendar.component(.weekday, from: self)
