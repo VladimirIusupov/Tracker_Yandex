@@ -14,7 +14,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
 
     private lazy var quantityView: UIView = {
         var view = UIView()
-        contentView.addSubview(view)
         return view
     }()
     
@@ -23,7 +22,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let button = UIButton.systemButton(with: plusImage, target: self, action: #selector(onButtonTapped))
         button.tintColor = .ypWhite
         button.layer.cornerRadius = 17
-        quantityView.addSubview(button)
         return button
     }()
     
@@ -33,7 +31,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         view.layer.cornerRadius = 16
         view.layer.borderWidth = 1
         view.layer.borderColor = color.cgColor
-        contentView.addSubview(view)
         return view
     }()
     
@@ -41,7 +38,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         view.layer.cornerRadius = 12
         view.backgroundColor = .ypEmojiBackground
-        cardView.addSubview(view)
         return view
     }()
     
@@ -51,7 +47,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
-        circleView.addSubview(label)
         return label
     }()
     
@@ -61,7 +56,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         label.textColor = .ypWhite
         label.numberOfLines = 2
         label.baselineAdjustment = .alignBaselines
-        cardView.addSubview(label)
         return label
     }()
     
@@ -69,59 +63,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypBlack
-        quantityView.addSubview(label)
         return label
     }()
     
-    // MARK: - Initializers
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        daysLabel.translatesAutoresizingMaskIntoConstraints = false
-        emojiLabel.translatesAutoresizingMaskIntoConstraints = false
-        cardView.translatesAutoresizingMaskIntoConstraints = false
-        quantityView.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.translatesAutoresizingMaskIntoConstraints = false
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            cardView.topAnchor.constraint(equalTo: topAnchor),
-            cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            cardView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            circleView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            circleView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
-            circleView.heightAnchor.constraint(equalToConstant: 24),
-            circleView.widthAnchor.constraint(equalToConstant: 24),
-            
-            emojiLabel.centerXAnchor.constraint(equalTo: circleView.centerXAnchor),
-            emojiLabel.centerYAnchor.constraint(equalTo: circleView.centerYAnchor),
-            emojiLabel.leadingAnchor.constraint(greaterThanOrEqualTo: circleView.leadingAnchor, constant: 2),
-            emojiLabel.trailingAnchor.constraint(lessThanOrEqualTo: circleView.trailingAnchor, constant: -2),
-            emojiLabel.topAnchor.constraint(greaterThanOrEqualTo: circleView.topAnchor, constant: 2),
-            emojiLabel.bottomAnchor.constraint(lessThanOrEqualTo: circleView.bottomAnchor, constant: -2),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor,constant: -12),
-            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: cardView.topAnchor, constant: 44),
-            titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
-            
-            quantityView.topAnchor.constraint(equalTo: cardView.bottomAnchor),
-            quantityView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            quantityView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            quantityView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            daysLabel.leadingAnchor.constraint(equalTo: quantityView.leadingAnchor,constant: 12),
-            daysLabel.topAnchor.constraint(equalTo: quantityView.topAnchor,constant: 16),
-            daysLabel.trailingAnchor.constraint(equalTo: plusButton.leadingAnchor, constant: 8),
-            daysLabel.bottomAnchor.constraint(equalTo: quantityView.bottomAnchor, constant: -24),
-            
-            plusButton.widthAnchor.constraint(equalToConstant: 34),
-            plusButton.heightAnchor.constraint(equalToConstant: 34),
-            plusButton.trailingAnchor.constraint(equalTo: quantityView.trailingAnchor,constant: -12),
-            plusButton.topAnchor.constraint(equalTo: quantityView.topAnchor, constant: 8),
-        ])
+
+        setupSubviews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -147,6 +97,64 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Private Methods
+    private func setupSubviews() {
+        contentView.addSubview(quantityView)
+        quantityView.addSubview(plusButton)
+        contentView.addSubview(cardView)
+        cardView.addSubview(circleView)
+        circleView.addSubview(emojiLabel)
+        cardView.addSubview(titleLabel)
+        quantityView.addSubview(daysLabel)
+    }
+
+    private func setupConstraints() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        daysLabel.translatesAutoresizingMaskIntoConstraints = false
+        emojiLabel.translatesAutoresizingMaskIntoConstraints = false
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        quantityView.translatesAutoresizingMaskIntoConstraints = false
+        plusButton.translatesAutoresizingMaskIntoConstraints = false
+        circleView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: trailingAnchor),
+
+            circleView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
+            circleView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
+            circleView.heightAnchor.constraint(equalToConstant: 24),
+            circleView.widthAnchor.constraint(equalToConstant: 24),
+
+            emojiLabel.centerXAnchor.constraint(equalTo: circleView.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: circleView.centerYAnchor),
+            emojiLabel.leadingAnchor.constraint(greaterThanOrEqualTo: circleView.leadingAnchor, constant: 2),
+            emojiLabel.trailingAnchor.constraint(lessThanOrEqualTo: circleView.trailingAnchor, constant: -2),
+            emojiLabel.topAnchor.constraint(greaterThanOrEqualTo: circleView.topAnchor, constant: 2),
+            emojiLabel.bottomAnchor.constraint(lessThanOrEqualTo: circleView.bottomAnchor, constant: -2),
+
+            titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor,constant: -12),
+            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: cardView.topAnchor, constant: 44),
+            titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
+
+            quantityView.topAnchor.constraint(equalTo: cardView.bottomAnchor),
+            quantityView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            quantityView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            quantityView.trailingAnchor.constraint(equalTo: trailingAnchor),
+
+            daysLabel.leadingAnchor.constraint(equalTo: quantityView.leadingAnchor,constant: 12),
+            daysLabel.topAnchor.constraint(equalTo: quantityView.topAnchor,constant: 16),
+            daysLabel.trailingAnchor.constraint(equalTo: plusButton.leadingAnchor, constant: 8),
+            daysLabel.bottomAnchor.constraint(equalTo: quantityView.bottomAnchor, constant: -24),
+
+            plusButton.widthAnchor.constraint(equalToConstant: 34),
+            plusButton.heightAnchor.constraint(equalToConstant: 34),
+            plusButton.trailingAnchor.constraint(equalTo: quantityView.trailingAnchor,constant: -12),
+            plusButton.topAnchor.constraint(equalTo: quantityView.topAnchor, constant: 8),
+        ])
+    }
+
     private func updateCompletionStatus(isCompletedToday: Bool) {
         if isCompletedToday {
             plusButton.setImage(UIImage(named: "done"), for: .normal)
@@ -163,4 +171,3 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         delegate?.updateQuantity(cell: self)
     }
 }
-
