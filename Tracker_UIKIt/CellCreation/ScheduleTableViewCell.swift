@@ -18,26 +18,24 @@ final class ScheduleTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textColor = .ypBlack
         label.textAlignment = .left
-        contentView.addSubview(label)
         return label
     }()
     
     private lazy var toggleSwitch: UISwitch = {
         let toggleSwitch = UISwitch()
-        contentView.addSubview(toggleSwitch)
         toggleSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         toggleSwitch.onTintColor = .ypBlue
         return toggleSwitch
     }()
     
-    // MARK: - Initializers
+    // MARK: - Init
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .ypBackground
+        setupSubviews()
         setupConstraints()
     }
     
@@ -48,6 +46,12 @@ final class ScheduleTableViewCell: UITableViewCell {
     }
     
     // MARK: - Private Methods
+    private func setupSubviews() {
+        contentView.backgroundColor = .ypBackground
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(toggleSwitch)
+    }
+
     private func setupConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         toggleSwitch.translatesAutoresizingMaskIntoConstraints = false

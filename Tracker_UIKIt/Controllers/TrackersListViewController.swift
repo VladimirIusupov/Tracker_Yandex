@@ -17,7 +17,7 @@ protocol UserTrackersServiceDelegate: AnyObject {
 final class TrackersListViewController: UIViewController {
     
     // MARK: - Private Properties
-    private var userTrackersService: UserTrackersServiceProtocol = UserTrackersService()
+    private var userTrackersService: UserTrackersServiceProtocol = TrackerService()
     
     private lazy var cellWidth = ceil((UIScreen.main.bounds.width - sideInset * 2 - 10)/2)
     private let cellHeight: CGFloat = 148
@@ -36,19 +36,16 @@ final class TrackersListViewController: UIViewController {
         collectionView.delegate = self
         collectionView.register(CategoryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CategoryHeaderView.identifier)
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
-        view.addSubview(collectionView)
         return collectionView
     }()
     
     private lazy var emptyView: UIView = {
         let view = UIView()
-        self.view.addSubview(view)
         return view
     }()
     
     private lazy var errorView: UIView = {
         let view = UIView()
-        emptyView.addSubview(view)
         return view
     }()
     
@@ -57,7 +54,6 @@ final class TrackersListViewController: UIViewController {
         label.text = "Трекеры"
         label.font = .systemFont(ofSize: 34, weight: .bold)
         label.textColor = .ypBlack
-        view.addSubview(label)
         return label
     }()
     
@@ -67,7 +63,6 @@ final class TrackersListViewController: UIViewController {
         searchBar.searchBarStyle = .minimal
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.setValue("Отменить", forKey: "cancelButtonText")
-        view.addSubview(searchBar)
         searchBar.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self,
                                                 action: #selector(hideKeyboard))
@@ -78,7 +73,6 @@ final class TrackersListViewController: UIViewController {
     
     private lazy var starImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "star"))
-        errorView.addSubview(imageView)
         return imageView
     }()
     
@@ -88,7 +82,6 @@ final class TrackersListViewController: UIViewController {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypBlack
-        errorView.addSubview(label)
         return label
     }()
     
@@ -99,12 +92,23 @@ final class TrackersListViewController: UIViewController {
         
         userTrackersService.delegate = self
         setupNavBarItems()
+        setupSubviews()
         setupConstraints()
         
         emptyView.isHidden = userTrackersService.getAllTrackersCount() > 0
     }
     
     // MARK: - Private Methods
+    private func setupSubviews() {
+        view.addSubview(collectionView)
+        view.addSubview(emptyView)
+        emptyView.addSubview(errorView)
+        view.addSubview(titleLabel)
+        view.addSubview(searchBar)
+        errorView.addSubview(starImageView)
+        errorView.addSubview(errorLabel)
+
+    }
     private func setupConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,7 +117,6 @@ final class TrackersListViewController: UIViewController {
         starImageView.translatesAutoresizingMaskIntoConstraints = false
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         errorView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(emptyView)
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -173,7 +176,7 @@ final class TrackersListViewController: UIViewController {
             let filteredTrackers = TrackerCategory(name: category.name, trackers: (category.trackers.filter { $0.schedule.contains(day) }))
             filteredCategories.append(filteredTrackers)
         }
-        userTrackersService.updateDisplayedCategories(categories: filteredCategories)
+        userTrackersService.setFilteredCategories(filteredCategories)
         collectionView.reloadData()
         for category in userTrackersService.categories {
             if !category.trackers.isEmpty {
@@ -183,7 +186,7 @@ final class TrackersListViewController: UIViewController {
         }
         emptyView.isHidden = false
     }
-    
+
     @objc
     private func datePickerValueChanged(_ sender: UIDatePicker) {
         guard let selectedDay = sender.date.dayOfWeek(calendar: calendar) else { return }
@@ -287,7 +290,7 @@ extension TrackersListViewController: CreationDelegate {
     func didCreateCategory(name: String) {
         let newCategory = TrackerCategory(name: name, trackers: [])
         userTrackersService.addCategory(newCategory)
-        userTrackersService.updateDisplayedCategories(categories: userTrackersService.getAllCategories())
+        userTrackersService.setFilteredCategories(userTrackersService.getAllCategories())
     }
 }
 
@@ -344,6 +347,4 @@ extension TrackersListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-
 }
-
