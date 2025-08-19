@@ -22,7 +22,7 @@ final class TrackerService: UserTrackersServiceProtocol {
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore
 
-        addCategory(TrackerCategory(name: "Домашний уют", trackers: []))
+        addCategory(TrackerCategory(name: "Default Category", trackers: []))
         self.categories = trackerCategoryStore.categories
         self.completedTrackers = trackerRecordStore.trackerRecords
     }
