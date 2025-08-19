@@ -9,7 +9,7 @@ final class TrackerCreationViewController: UIViewController {
     private let tableViewItems: [String] = ["Категория", "Расписание"]
     
     private var schedule: Set<Day> = []
-    private var category: TrackerCategory? = TrackerCategory(name: "Домашний уют", trackers: [])
+    private var category: TrackerCategory? = TrackerCategory(name: "Default Category", trackers: [])
     private var emoji: Character?
     private var color: UIColor?
     

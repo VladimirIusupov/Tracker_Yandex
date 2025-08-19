@@ -6,7 +6,7 @@ final class EventCreationViewController: UIViewController {
     weak var delegate: CreationDelegate?
 
     // MARK: - Private Properties
-    private var category: TrackerCategory? = TrackerCategory(name: "Домашний уют", trackers: [])
+    private var category: TrackerCategory? = TrackerCategory(name: "Default Category", trackers: [])
     private var emoji:Character?
     private var color: UIColor?
 
