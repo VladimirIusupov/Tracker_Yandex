@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TrackerRecordStorable {
+protocol TrackerRecordStoreProtocol {
     var trackerRecords: [TrackerRecord] { get }
     func add(_ trackerRecord: TrackerRecord) throws
     func delete(with trackerId: UUID, on date: Date, using calendar: Calendar)
@@ -11,7 +11,7 @@ enum TrackerRecordStoreError: Error {
     case trackerNotFound
 }
 
-final class TrackerRecordStore: TrackerRecordStorable {
+final class TrackerRecordStore: TrackerRecordStoreProtocol {
 
     // MARK: - Private Properties
     private let coreDataManager = CoreDataManager.shared

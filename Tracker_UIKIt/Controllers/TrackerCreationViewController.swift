@@ -9,7 +9,7 @@ final class TrackerCreationViewController: UIViewController {
     private let tableViewItems: [String] = ["Категория", "Расписание"]
     
     private var schedule: Set<Day> = []
-    private var category: TrackerCategory? = TrackerCategory(name: "Default Category", trackers: [])
+    private var category: TrackerCategory?
     private var emoji: Character?
     private var color: UIColor?
     
@@ -295,7 +295,12 @@ extension TrackerCreationViewController: UITableViewDelegate, UITableViewDataSou
             navController.modalPresentationStyle = .formSheet
             present(navController, animated: true)
         } else if indexPath.row == 0 {
-            //TODO: Реализовать переход на экран выбора категорий
+            let viewController = TrackerCategoryListViewController()
+            viewController.viewModel = TrackerCategoryListViewModel()
+            viewController.viewModel?.delegate = self
+            let navController = UINavigationController(rootViewController: viewController)
+            navController.modalPresentationStyle = .formSheet
+            present(navController, animated: true)
         }
     }
 }
@@ -317,6 +322,7 @@ extension TrackerCreationViewController: UITextFieldDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension TrackerCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == emojiCollectionView {
@@ -346,6 +352,7 @@ extension TrackerCreationViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension TrackerCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 52, height: 52)
@@ -384,5 +391,14 @@ extension TrackerCreationViewController: UICollectionViewDelegateFlowLayout {
                 cell.deselect()
             }
         }
+    }
+}
+
+// MARK: - TrackerCategoryListViewModelDelegate
+extension TrackerCreationViewController: TrackerCategoryListViewModelDelegate {
+    func didSelectCategory(_ category: TrackerCategory) {
+        self.category = category
+        createButtonAvailabilityCheck()
+        tableView.reloadData()
     }
 }

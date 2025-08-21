@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TrackerCategoryStorable {
+protocol TrackerCategoryStoreProtocol {
     var categories: [TrackerCategory] { get }
     func add(_ category: TrackerCategory) throws
     func fetchCategory(by name: String) throws -> TrackerCategory?
@@ -10,7 +10,10 @@ enum TrackerCategoryStoreError: Error {
     case decodingError
 }
 
-final class TrackerCategoryStore: NSObject, TrackerCategoryStorable {
+final class TrackerCategoryStore: NSObject, TrackerCategoryStoreProtocol {
+
+    // MARK: - Static Properties
+    static let shared = TrackerCategoryStore()
 
     // MARK: - Public Properties
     var categories: [TrackerCategory] {
@@ -30,7 +33,7 @@ final class TrackerCategoryStore: NSObject, TrackerCategoryStorable {
     }()
 
     // MARK: - Init
-    override init() {
+    private override init() {
         super.init()
         do {
             try fetchedResultsController.performFetch()

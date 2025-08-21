@@ -6,7 +6,7 @@ final class EventCreationViewController: UIViewController {
     weak var delegate: CreationDelegate?
 
     // MARK: - Private Properties
-    private var category: TrackerCategory? = TrackerCategory(name: "Default Category", trackers: [])
+    private var category: TrackerCategory?
     private var emoji:Character?
     private var color: UIColor?
 
@@ -257,7 +257,12 @@ extension EventCreationViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: Реализовать переход к экрану выбора категорий
+        let viewController = TrackerCategoryListViewController()
+        viewController.viewModel = TrackerCategoryListViewModel()
+        viewController.viewModel?.delegate = self
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.modalPresentationStyle = .formSheet
+        present(navController, animated: true)
     }
 }
 
@@ -269,6 +274,7 @@ extension EventCreationViewController: UITextFieldDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension EventCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == emojiCollectionView {
@@ -298,6 +304,7 @@ extension EventCreationViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension EventCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 52, height: 52)
@@ -336,5 +343,14 @@ extension EventCreationViewController: UICollectionViewDelegateFlowLayout {
                 cell.deselect()
             }
         }
+    }
+}
+
+// MARK: - TrackerCategoryListViewModelDelegate
+extension EventCreationViewController: TrackerCategoryListViewModelDelegate {
+    func didSelectCategory(_ category: TrackerCategory) {
+        self.category = category
+        createButtonAvailabilityCheck()
+        tableView.reloadData()
     }
 }

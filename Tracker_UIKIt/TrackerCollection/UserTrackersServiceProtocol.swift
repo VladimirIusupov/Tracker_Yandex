@@ -12,4 +12,3 @@ protocol UserTrackersServiceProtocol {
     func setFilteredCategories(_ categories: [TrackerCategory])
     func getAllTrackersCount() -> Int
 }
-

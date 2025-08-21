@@ -8,21 +8,20 @@ final class TrackerService: UserTrackersServiceProtocol {
     private(set) var completedTrackers: [TrackerRecord] = []
 
     // MARK: - Private Properties
-    private let trackerStore: TrackerStorable
-    private let trackerCategoryStore: TrackerCategoryStorable
-    private let trackerRecordStore: TrackerRecordStorable
+    private let trackerStore: TrackerStoreProtocol
+    private let trackerCategoryStore: TrackerCategoryStoreProtocol
+    private let trackerRecordStore: TrackerRecordStoreProtocol
 
     // MARK: - Init
     init(
         trackerStore: TrackerStore = TrackerStore(),
-        trackerCategoryStore: TrackerCategoryStore = TrackerCategoryStore(),
+        trackerCategoryStore: TrackerCategoryStore = TrackerCategoryStore.shared,
         trackerRecordStore: TrackerRecordStore = TrackerRecordStore()
     ) {
         self.trackerStore = trackerStore
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore
 
-        addCategory(TrackerCategory(name: "Default Category", trackers: []))
         self.categories = trackerCategoryStore.categories
         self.completedTrackers = trackerRecordStore.trackerRecords
     }
