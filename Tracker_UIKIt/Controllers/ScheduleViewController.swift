@@ -22,14 +22,15 @@ final class ScheduleViewController: UIViewController {
         tableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
         tableView.isScrollEnabled = false
         tableView.tableHeaderView = UIView()
+        tableView.separatorColor = .ypGray
         return tableView
     }()
     
     private lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(L10n.General.done, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.titleLabel?.textColor = .ypWhite
+        button.setTitleColor(.ypWhite, for: .normal)
         button.backgroundColor = .ypBlack
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
@@ -43,7 +44,7 @@ final class ScheduleViewController: UIViewController {
         setupSubviews()
         setupConstraints()
         navigationController?.navigationBar.tintColor = .ypBlack
-        navigationItem.title = "Расписание"
+        navigationItem.title = L10n.Creation.schedule
     }
 
     // MARK: - Private Properties
@@ -99,8 +100,8 @@ extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
         setupSeparator(for: cell, at: indexPath)
         cell.delegate = self
         cell.selectionStyle = .none
-        let isOn = selectedDays.contains(where: { $0.rawValue == tableViewItems[indexPath.row] })
-        cell.setupCell(withTitle: tableViewItems[indexPath.row], isOn: isOn)
+        let isOn = selectedDays.contains(where: { $0.fullName == tableViewItems[indexPath.row] })
+        cell.setupCell(withDay: Day(rawValue: tableViewItems[indexPath.row]), isOn: isOn)
         return cell
     }
 

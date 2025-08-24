@@ -16,8 +16,8 @@ final class EventCreationViewController: UIViewController {
     private let scrollView = UIScrollView()
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
+        button.setTitle(L10n.General.create, for: .normal)
+        button.setTitleColor(.ypAlwaysWhite, for: .normal)
         button.backgroundColor = .ypGray
         button.isEnabled = false
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -29,7 +29,7 @@ final class EventCreationViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         let color: UIColor = .ypRed
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(L10n.General.cancel, for: .normal)
         button.setTitleColor(color, for: .normal)
         button.backgroundColor = .clear
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -42,7 +42,10 @@ final class EventCreationViewController: UIViewController {
 
     private lazy var trackerNameTextField: UITextField = {
         let textField = PaddedTextField()
-        textField.placeholder = "Введите название трекера"
+        textField.attributedPlaceholder = NSAttributedString(
+            string: L10n.Creation.placeholder,
+            attributes: [.foregroundColor: UIColor.ypGray]
+        )
         textField.backgroundColor = .ypBackground
         textField.layer.cornerRadius = 16
         textField.clearButtonMode = .whileEditing
@@ -62,6 +65,7 @@ final class EventCreationViewController: UIViewController {
         tableView.layer.cornerRadius = 16
         tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.separatorColor = .ypGray
         tableView.dataSource = self
         tableView.isScrollEnabled = false
 
@@ -84,7 +88,7 @@ final class EventCreationViewController: UIViewController {
         label.textColor = .label
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.textColor = .ypBlack
-        label.text = "Emoji"
+        label.text = L10n.Creation.emoji
         return label
     }()
 
@@ -104,7 +108,7 @@ final class EventCreationViewController: UIViewController {
         label.textColor = .label
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.textColor = .ypBlack
-        label.text = "Цвет"
+        label.text = L10n.Creation.color
         return label
     }()
 
@@ -113,7 +117,7 @@ final class EventCreationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         navigationController?.navigationBar.tintColor = .ypBlack
-        navigationItem.title = "Новое нерегулярное событие"
+        navigationItem.title = L10n.Creation.irregularTitle
         setupSubviews()
         setupConstraints()
     }
@@ -122,6 +126,7 @@ final class EventCreationViewController: UIViewController {
     private func createButtonAvailabilityCheck() {
         let isInputValid = trackerNameTextField.hasText && category != nil && color != nil && emoji != nil
         createButton.isEnabled = isInputValid
+        createButton.setTitleColor(isInputValid ? .ypWhite : .ypAlwaysWhite, for: .normal)
         createButton.backgroundColor = isInputValid ? .ypBlack : .ypGray
     }
 
@@ -239,9 +244,8 @@ extension EventCreationViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
 
-        cell.textLabel?.text = "Категория"
+        cell.textLabel?.text = L10n.Creation.category
         cell.detailTextLabel?.text = category?.name ?? ""
-
         cell.detailTextLabel?.textColor = .ypGray
         cell.textLabel?.textColor = .ypBlack
         cell.textLabel?.font = .systemFont(ofSize: 17, weight: .regular)

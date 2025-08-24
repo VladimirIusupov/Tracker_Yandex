@@ -4,12 +4,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    private let userLoginStorage = UserLoginStorage()
+    private let userDefaultsStorage = UserDefaultsStorage()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = userLoginStorage.isUserLogged ? TabBarController() : OnboardingViewController()
+        window?.rootViewController = userDefaultsStorage.isUserLogged ? TabBarController() : OnboardingViewController()
         window?.makeKeyAndVisible()
     }
 
