@@ -3,12 +3,12 @@ import UIKit
 final class OnboardingStepViewController: UIViewController {
 
     // MARK: - Private Properties
-    private let userLoginStorage = UserLoginStorage()
-    
+    private let userDefaultsStorage = UserDefaultsStorage()
+
     private var background = UIImageView()
     private var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .ypBlack
+        label.textColor = .ypAlwaysBlack
         label.font = .systemFont(ofSize: 32, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -17,10 +17,10 @@ final class OnboardingStepViewController: UIViewController {
 
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Вот это технологии!", for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
+        button.setTitle(L10n.Onboarding.button, for: .normal)
+        button.setTitleColor(.ypAlwaysWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.backgroundColor = .ypBlack
+        button.backgroundColor = .ypAlwaysBlack
         button.addTarget(self, action: #selector(onButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
         return button
@@ -71,7 +71,7 @@ final class OnboardingStepViewController: UIViewController {
 
     @objc
     private func onButtonTapped() {
-        userLoginStorage.isUserLogged.toggle()
+        userDefaultsStorage.isUserLogged.toggle()
         let tabBarController = TabBarController()
 
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -87,4 +87,3 @@ final class OnboardingStepViewController: UIViewController {
         }
     }
 }
-

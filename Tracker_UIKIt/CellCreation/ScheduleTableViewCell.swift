@@ -13,6 +13,7 @@ final class ScheduleTableViewCell: UITableViewCell {
     weak var delegate: ScheduleTableViewCellDelegate?
     
     // MARK: - Private Properties
+    private var day: Day?
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
@@ -40,9 +41,10 @@ final class ScheduleTableViewCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func setupCell(withTitle title: String, isOn: Bool) {
-        self.titleLabel.text = title
+    func setupCell(withDay day: Day?, isOn: Bool) {
+        self.titleLabel.text = day?.fullName
         self.toggleSwitch.isOn = isOn
+        self.day = day
     }
     
     // MARK: - Private Methods
@@ -70,6 +72,6 @@ final class ScheduleTableViewCell: UITableViewCell {
     
     @objc
     private func switchChanged() {
-        delegate?.switchTableViewCell(titleLabel.text, didChangeValue: toggleSwitch.isOn)
+        delegate?.switchTableViewCell(day?.rawValue, didChangeValue: toggleSwitch.isOn)
     }
 }

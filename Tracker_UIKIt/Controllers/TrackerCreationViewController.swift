@@ -6,8 +6,8 @@ final class TrackerCreationViewController: UIViewController {
     weak var delegate: CreationDelegate?
     
     // MARK: - Private Properties
-    private let tableViewItems: [String] = ["Категория", "Расписание"]
-    
+    private let tableViewItems: [String] = [L10n.Creation.category, L10n.Creation.schedule]
+
     private var schedule: Set<Day> = []
     private var category: TrackerCategory?
     private var emoji: Character?
@@ -19,8 +19,8 @@ final class TrackerCreationViewController: UIViewController {
     private let scrollView = UIScrollView()
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
+        button.setTitle(L10n.General.create, for: .normal)
+        button.setTitleColor(.ypAlwaysWhite, for: .normal)
         button.backgroundColor = .ypGray
         button.isEnabled = false
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -32,7 +32,7 @@ final class TrackerCreationViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         let color: UIColor = .ypRed
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(L10n.General.cancel, for: .normal)
         button.setTitleColor(color, for: .normal)
         button.backgroundColor = .clear
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -45,7 +45,10 @@ final class TrackerCreationViewController: UIViewController {
     
     private lazy var trackerNameTextField: UITextField = {
         let textField = PaddedTextField()
-        textField.placeholder = "Введите название трекера"
+        textField.attributedPlaceholder = NSAttributedString(
+            string: L10n.Creation.placeholder,
+            attributes: [.foregroundColor: UIColor.ypGray]
+        )
         textField.backgroundColor = .ypBackground
         textField.layer.cornerRadius = 16
         textField.clearButtonMode = .whileEditing
@@ -67,6 +70,7 @@ final class TrackerCreationViewController: UIViewController {
         tableView.dataSource = self
         tableView.isScrollEnabled = false
         tableView.tableHeaderView = UIView()
+        tableView.separatorColor = .ypGray
         return tableView
     }()
     
@@ -86,7 +90,7 @@ final class TrackerCreationViewController: UIViewController {
         label.textColor = .label
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.textColor = .ypBlack
-        label.text = "Emoji"
+        label.text = L10n.Creation.emoji
         return label
     }()
     
@@ -106,7 +110,7 @@ final class TrackerCreationViewController: UIViewController {
         label.textColor = .label
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.textColor = .ypBlack
-        label.text = "Цвет"
+        label.text = L10n.Creation.color
         return label
     }()
     
@@ -115,7 +119,7 @@ final class TrackerCreationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         navigationController?.navigationBar.tintColor = .ypBlack
-        navigationItem.title = "Новая привычка"
+        navigationItem.title = L10n.Creation.habitTitle
         setupSubviews()
         setupConstraints()
     }
@@ -124,6 +128,7 @@ final class TrackerCreationViewController: UIViewController {
     private func createButtonAvailabilityCheck() {
         let isInputValid = trackerNameTextField.hasText && category != nil && schedule.isEmpty == false && emoji != nil && color != nil
         createButton.isEnabled = isInputValid
+        createButton.setTitleColor(isInputValid ? .ypWhite : .ypAlwaysWhite, for: .normal)
         createButton.backgroundColor = isInputValid ? .ypBlack : .ypGray
     }
 
@@ -201,7 +206,7 @@ final class TrackerCreationViewController: UIViewController {
     
     private func getScheduleSubtitle() -> String {
         if schedule.count == 7 {
-            return "Каждый день"
+            return L10n.Creation.everyDay
         }
         let shortNames = schedule
             .sorted {

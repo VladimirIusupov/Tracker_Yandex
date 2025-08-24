@@ -10,7 +10,7 @@ final class TrackerTypeChoiceViewController: UIViewController {
 
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Привычка", for: .normal)
+        button.setTitle(L10n.TypeChoice.habit, for: .normal)
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -22,7 +22,7 @@ final class TrackerTypeChoiceViewController: UIViewController {
     
     private lazy var eventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Нерегулярное событие", for: .normal)
+        button.setTitle(L10n.TypeChoice.irregular, for: .normal)
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -39,7 +39,7 @@ final class TrackerTypeChoiceViewController: UIViewController {
         setupSubviews()
         setupConstraints()
         navigationController?.navigationBar.tintColor = .ypBlack
-        navigationItem.title = "Создание трекера"
+        navigationItem.title = L10n.TypeChoice.title
     }
 
     // MARK: - Private Methods

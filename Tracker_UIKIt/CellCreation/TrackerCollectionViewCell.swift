@@ -11,6 +11,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     // MARK: - Private Properties
     private(set) var trackerID: UUID?
     private(set) var schedule: Set<Day>?
+    private(set) var tracker: Tracker?
+    private(set) var days: Int = 0
+    private var isPinned: Bool = false
 
     private lazy var quantityView: UIView = {
         var view = UIView()
@@ -53,7 +56,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .ypWhite
+        label.textColor = .ypAlwaysWhite
         label.numberOfLines = 2
         label.baselineAdjustment = .alignBaselines
         return label
@@ -65,13 +68,18 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         label.textColor = .ypBlack
         return label
     }()
-    
+
+    private lazy var pinImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "pin"))
+        return imageView
+    }()
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         setupSubviews()
         setupConstraints()
+        setupContextMenu()
     }
     
     required init?(coder: NSCoder) {
@@ -79,25 +87,32 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func setupCell(tracker: Tracker, days: Int, isCompletedToday: Bool) {
+    func setupCell(tracker: Tracker, days: Int, isCompletedToday: Bool, isPinned: Bool) {
+        self.isPinned = isPinned
+        pinImageView.isHidden = !isPinned
         plusButton.backgroundColor = tracker.color
         cardView.backgroundColor = tracker.color
         titleLabel.text = tracker.name
         emojiLabel.text = String(tracker.emoji)
         self.trackerID = tracker.id
         self.schedule = tracker.schedule
-        daysLabel.text = days.days()
+        self.tracker = tracker
+        self.days = days
+        daysLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("days_count", comment: ""), days)
         updateCompletionStatus(isCompletedToday: isCompletedToday)
     }
 
     func updateDays(days: Int, isAddition: Bool) {
-        daysLabel.text = days.days()
-        
+        daysLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("days_count", comment: ""), days)
+        self.days = days
         updateCompletionStatus(isCompletedToday: isAddition)
     }
     
     // MARK: - Private Methods
     private func setupSubviews() {
+        contentView.backgroundColor = .clear
         contentView.addSubview(quantityView)
         quantityView.addSubview(plusButton)
         contentView.addSubview(cardView)
@@ -105,6 +120,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         circleView.addSubview(emojiLabel)
         cardView.addSubview(titleLabel)
         quantityView.addSubview(daysLabel)
+        cardView.addSubview(pinImageView)
     }
 
     private func setupConstraints() {
@@ -115,6 +131,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         quantityView.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
         circleView.translatesAutoresizingMaskIntoConstraints = false
+        pinImageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             cardView.topAnchor.constraint(equalTo: topAnchor),
@@ -152,8 +169,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             plusButton.heightAnchor.constraint(equalToConstant: 34),
             plusButton.trailingAnchor.constraint(equalTo: quantityView.trailingAnchor,constant: -12),
             plusButton.topAnchor.constraint(equalTo: quantityView.topAnchor, constant: 8),
+
+            pinImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
+            pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -4),
         ])
     }
+
 
     private func updateCompletionStatus(isCompletedToday: Bool) {
         if isCompletedToday {
@@ -165,9 +186,39 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             plusButton.alpha = 1
         }
     }
-    
+
+    private func setupContextMenu() {
+        let interaction = UIContextMenuInteraction(delegate: self)
+        cardView.isUserInteractionEnabled = true
+        cardView.addInteraction(interaction)
+    }
+
     @objc
     private func onButtonTapped() {
         delegate?.updateQuantity(cell: self)
+    }
+}
+
+extension TrackerCollectionViewCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+                                 configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(actionProvider: { actions in
+            return UIMenu(children: [
+                UIAction(title: (self.isPinned ? L10n.General.unpin : L10n.General.pin)) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.delegate?.togglePin(cell: self)
+                },
+                UIAction(title: L10n.General.update) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.delegate?.update(cell: self)
+                },
+                UIAction(title: L10n.General.delete,
+                         attributes: .destructive
+                        ) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.delegate?.delete(cell: self)
+                }
+            ])
+        })
     }
 }

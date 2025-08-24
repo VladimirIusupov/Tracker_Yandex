@@ -15,6 +15,7 @@ final class TrackerCategoryListViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.register(TrackerCategoryListCell.self, forCellReuseIdentifier: TrackerCategoryListCell.reuseIdentifier)
         tableView.tableHeaderView = UIView()
+        tableView.separatorColor = .ypGray
         return tableView
     }()
 
@@ -35,7 +36,7 @@ final class TrackerCategoryListViewController: UIViewController {
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = "Привычки и события можно \nобъеденить по смыслу"
+        label.text = L10n.Categories.emptyState
         label.numberOfLines = 2
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 12, weight: .medium)
@@ -45,7 +46,7 @@ final class TrackerCategoryListViewController: UIViewController {
 
     private lazy var button: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.Categories.create, for: .normal)
         button.setTitleColor(.ypWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = .ypBlack
@@ -58,7 +59,7 @@ final class TrackerCategoryListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = .ypBlack
-        navigationItem.title = "Категория"
+        navigationItem.title = L10n.Categories.title
 
         bindViewModel()
         setupSubviews()

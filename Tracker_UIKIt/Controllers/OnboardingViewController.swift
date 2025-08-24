@@ -6,11 +6,11 @@ final class OnboardingViewController: UIPageViewController {
     private lazy var pages: [UIViewController] = {
         let first = OnboardingStepViewController()
         let firstImage = UIImage(named: "Onboarding1") ?? UIImage()
-        first.setup(with: firstImage, title: "Отслеживайте только то, что хотите")
+        first.setup(with: firstImage, title: L10n.Onboarding.blueTitle)
 
         let second = OnboardingStepViewController()
         let secondImage = UIImage(named: "Onboarding2") ?? UIImage()
-        second.setup(with: secondImage, title: "Даже если это \nне литры воды и йога")
+        second.setup(with: secondImage, title: L10n.Onboarding.redTitle)
 
         return [first, second]
     }()
@@ -20,8 +20,8 @@ final class OnboardingViewController: UIPageViewController {
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
 
-        pageControl.currentPageIndicatorTintColor = .ypBlack
-        pageControl.pageIndicatorTintColor = .ypBlack.withAlphaComponent(0.3)
+        pageControl.currentPageIndicatorTintColor = .ypAlwaysBlack
+        pageControl.pageIndicatorTintColor = .ypAlwaysBlack.withAlphaComponent(0.3)
 
         return pageControl
     }()
@@ -99,4 +99,3 @@ extension OnboardingViewController: UIPageViewControllerDelegate {
         }
     }
 }
-
